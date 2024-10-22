@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 //Данная задача является "задачей о рюкзаке" следовательно решается с помощью динамического программирования. Оно реализуется в функции CalculateOptimalAttractions
-//Так как у меня 48 часов свободного времени за вычетом времени на сон, я подразумеваю, что бодрствовать могу 16 часов. 
+//Так как у меня 48 часов свободного времени за вычетом времени на сон, я подразумеваю, что бодрствовать могу от 14 до 18 часов. 
 namespace testTask
 {
     internal class Program
@@ -78,14 +78,33 @@ namespace testTask
             dictionaryOfAttractions = dictionaryOfAttractions.OrderByDescending(x => x.Value.importance).ToDictionary();
             const int freeTime = 48;
             const int sleepTime = 16;
-            int freeTimeOnFirstDay = 18;
-            int freeTimeOnSecondDay = 16;
-            List<string> attractions1 = new List<string>();
-            int result1 = CalculateOptimalAttractions(dictionaryOfAttractions, freeTimeOnFirstDay, ref attractions1);
-            Dictionary<string, (double time, int importance)> tempDictionary = new(dictionaryOfAttractions.Where(x => !attractions1.Contains(x.Key)));
-            List<string> attractions2 = new List<string>();
-            int result2 = CalculateOptimalAttractions(tempDictionary, freeTimeOnSecondDay, ref attractions2);
-            OutputResult(result1, result2, attractions1, attractions2);
+            const int countAddHours = 2;
+            int freeTimeOnFirstDay = (freeTime - sleepTime) / 2 + countAddHours;
+            int freeTimeOnSecondDay = (freeTime - sleepTime) / 2 - countAddHours;
+
+            int finalResult1 = 0, finalResult2 = 0;
+            List<string> finalAttractions1 = new List<string>();
+            List<string> finalAttractions2 = new List<string>();
+
+            for (int i = 0; i < countAddHours; i++)
+            {
+                List<string> attractions1 = new List<string>();
+                int result1 = CalculateOptimalAttractions(dictionaryOfAttractions, freeTimeOnFirstDay, ref attractions1);
+                Dictionary<string, (double time, int importance)> tempDictionary = new(dictionaryOfAttractions.Where(x => !attractions1.Contains(x.Key)));
+                List<string> attractions2 = new List<string>();
+                int result2 = CalculateOptimalAttractions(tempDictionary, freeTimeOnSecondDay, ref attractions2);
+                if (result1 + result2 > finalResult1 + finalResult2)
+                {
+                    finalResult1 = result1;
+                    finalAttractions1 = attractions1;
+                    finalResult2 = result2;
+                    finalAttractions2 = attractions2;
+                }
+                freeTimeOnFirstDay--;
+                freeTimeOnSecondDay++;
+            }
+            
+            OutputResult(finalResult1, finalResult2, finalAttractions1, finalAttractions2);
         }
 
         static void OutputResult(int result1, int result2, List<string> attractions1, List<string> attractions2)
