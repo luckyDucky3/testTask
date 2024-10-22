@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 
-//Данная задача является "задачей о рюкзаке" следовательно решается с помощью динамического программирования. Оно реализуется в функции CalculateOptimalAttractions
-//Так как у меня 48 часов свободного времени за вычетом времени на сон, я подразумеваю, что бодрствовать могу от 14 до 18 часов. 
 namespace testTask
 {
     internal class Program
@@ -37,8 +35,6 @@ namespace testTask
                 {
                     attractions = includeAttractions;
                     attractions.Add(attractionName);
-                    //totalTime = remainingTime;
-                    //dictionaryOfAttractions.Remove(attractionName);
 
                     return importanceWithAttraction;
                 }
